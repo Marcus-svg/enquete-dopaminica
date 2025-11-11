@@ -5,25 +5,24 @@ const cors = require('cors');
 const prisma = new PrismaClient();
 const app = express();
 
-app.use(cors()); // Permite que o frontend acesse a API
-app.use(express.json()); // Permite que o Express entenda JSON no corpo das requisições
+app.use(cors()); 
+app.use(express.json()); 
 
-// --- ENDPOINTS DA API ---
 
 // 1. Endpoint para CRIAR uma nova enquete
 app.post('/enquetes', async (req, res) => {
-  const { pergunta, opcoes } = req.body; // Pega a pergunta e as opções do corpo da requisição
+  const { pergunta, opcoes } = req.body; 
 
-  // Usa uma transação para garantir que a enquete e suas opções sejam criadas juntas
+  
   const enquete = await prisma.enquete.create({
     data: {
       pergunta,
       opcoes: {
-        create: opcoes.map(texto => ({ texto })), // Cria cada opção
+        create: opcoes.map(texto => ({ texto })), 
       },
     },
     include: {
-      opcoes: true, // Inclui as opções na resposta
+      opcoes: true, 
     },
   });
 
@@ -51,11 +50,11 @@ app.get('/enquetes/:id', async (req, res) => {
   res.json(enquete);
 });
 
-// 3. Endpoint para REGISTRAR um voto
+
 app.put('/opcoes/:id/votar', async (req, res) => {
   const { id } = req.params;
 
-  // Encontra a opção e incrementa o contador de votos em 1
+ 
   const opcaoAtualizada = await prisma.opcao.update({
     where: { id: Number(id) },
     data: {
