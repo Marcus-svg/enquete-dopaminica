@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './App.css'; // Vamos criar este arquivo para estilização básica
 
-// URL da nossa API (que está rodando na porta 3000)
-const API_URL = 'https://enquete-dopaminica.onrender.com';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   // Estados para controlar os dados da aplicação
