@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css'; // Vamos criar este arquivo para estilização básica
 
 // URL da nossa API (que está rodando na porta 3000)
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://enquete-dopaminica.onrender.com';
 
 function App() {
   // Estados para controlar os dados da aplicação
