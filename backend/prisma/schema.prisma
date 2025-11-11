@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Enquete {
+  id        Int      @id @default(autoincrement())
+  pergunta  String
+  opcoes    Opcao[]  // Uma enquete tem muitas opções
+}
+
+model Opcao {
+  id         Int     @id @default(autoincrement())
+  texto      String
+  votos      Int     @default(0)
+
+  enqueteId  Int
+  enquete    Enquete @relation(fields: [enqueteId], references: [id])
+}
