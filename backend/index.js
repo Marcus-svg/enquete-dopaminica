@@ -5,32 +5,42 @@ const cors = require('cors');
 const prisma = new PrismaClient();
 const app = express();
 
-app.use(cors()); // Permite que o frontend acesse a API
-app.use(express.json()); // Permite que o Express entenda JSON no corpo das requisições
+app.use(cors()); 
+app.use(express.json()); 
 
-// --- ENDPOINTS DA API ---
-
-// 1. Endpoint para CRIAR uma nova enquete
 app.post('/enquetes', async (req, res) => {
-  const { pergunta, opcoes } = req.body; // Pega a pergunta e as opções do corpo da requisição
+  const { pergunta, opcoes } = req.body;
 
-  // Usa uma transação para garantir que a enquete e suas opções sejam criadas juntas
   const enquete = await prisma.enquete.create({
     data: {
       pergunta,
       opcoes: {
-        create: opcoes.map(texto => ({ texto })), // Cria cada opção
+        create: opcoes.map(texto => ({ texto })),
       },
     },
     include: {
-      opcoes: true, // Inclui as opções na resposta
+      opcoes: true,
     },
   });
 
   res.json(enquete);
 });
 
-// 2. Endpoint para OBTER uma enquete específica (para votar ou ver resultados)
+//teste
+app.get('/enquetes', async (req, res) => {
+  const enquetes = await prisma.enquete.findMany({
+    orderBy: {
+      id: 'desc'
+    },
+    include: {
+        _count: {
+            select: { opcoes: true }
+        }
+    }
+  });
+  res.json(enquetes);
+});
+//até aqui
 app.get('/enquetes/:id', async (req, res) => {
   const { id } = req.params;
   const enquete = await prisma.enquete.findUnique({
@@ -69,8 +79,8 @@ app.put('/opcoes/:id/votar', async (req, res) => {
 });
 
 
-// --- INICIANDO O SERVIDOR ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
+
 });
